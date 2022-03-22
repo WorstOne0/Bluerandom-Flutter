@@ -1,5 +1,7 @@
+import 'package:bluerandom/widgets/bluetoothConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:bluerandom/pages/splashScreen.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 void main() => runApp(const MyApp());
 
@@ -14,8 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(
-        goToPage: TemporaryPage(),
+      home: SplashScreen(
+        goToPage: BluetoothConnection(),
         duration: 3,
       ),
     );
