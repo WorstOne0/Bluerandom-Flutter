@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
-class BluetoothConnection extends StatefulWidget {
-  BluetoothConnection({Key? key}) : super(key: key);
+class Teste extends StatefulWidget {
+  Teste({Key? key}) : super(key: key);
 
   // Instancia do Bluetooth
   final FlutterBlue flutterBlue = FlutterBlue.instance;
@@ -11,10 +11,10 @@ class BluetoothConnection extends StatefulWidget {
   //final Map<Guid, List<int>> readValues = <Guid, List<int>>{};
 
   @override
-  State<BluetoothConnection> createState() => _BluetoothConnectionState();
+  State<Teste> createState() => _TesteState();
 }
 
-class _BluetoothConnectionState extends State<BluetoothConnection> {
+class _TesteState extends State<Teste> {
   // late BluetoothDevice _connectedDevice;
   // late List<BluetoothService> _services;
 

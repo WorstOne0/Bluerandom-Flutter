@@ -1,7 +1,11 @@
-import 'package:bluerandom/widgets/bluetoothConnection.dart';
 import 'package:flutter/material.dart';
-import 'package:bluerandom/pages/splashScreen.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:provider/provider.dart';
+
+import 'package:bluerandom/pages/splashScreen.dart';
+import 'package:bluerandom/pages/startService.dart';
+
+import 'package:bluerandom/models/bluetoothConnection.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,33 +14,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bluerandom',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SplashScreen(
-        goToPage: BluetoothConnection(),
-        duration: 3,
-      ),
-    );
-  }
-}
-
-class TemporaryPage extends StatelessWidget {
-  const TemporaryPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: Text("Pagina Inicial"),
+    return ChangeNotifierProvider(
+      create: (context) => BluetoothConnection(),
+      child: MaterialApp(
+        title: 'Bluerandom',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: SplashScreen(
+          goToPage: StartPage(),
+          duration: 3,
         ),
       ),
-      floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
     );
   }
 }

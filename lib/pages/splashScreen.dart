@@ -34,7 +34,7 @@ class SplashScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
         ),
         width: double.infinity,
-        color: Colors.blue,
+        color: Colors.blue[700],
       ),
     );
   }
