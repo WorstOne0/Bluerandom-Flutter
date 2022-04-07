@@ -1,5 +1,4 @@
-import 'package:bluerandom/pages/teste.dart';
-import 'package:bluerandom/widgets/visualization.dart';
+import 'package:bluerandom/pages/visualization.dart';
 import 'package:flutter/material.dart';
 
 class StartPage extends StatefulWidget {
