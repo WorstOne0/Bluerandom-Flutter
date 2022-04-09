@@ -33,7 +33,7 @@ class DeviceList extends StatelessWidget {
                             flex: 1,
                             child: Container(
                               alignment: Alignment.center,
-                              child: Text("50"),
+                              child: Text(value.getRssi(index).toString()),
                             )),
                         Expanded(
                           flex: 6,

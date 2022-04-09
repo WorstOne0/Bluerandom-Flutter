@@ -10,6 +10,8 @@ class BluetoothConnection extends ChangeNotifier {
 
   // Bluetooth Instance
   final FlutterBlue _flutterBlue = FlutterBlue.instance;
+  // List with all RSSI values
+  final List<int> _rssiValues = <int>[];
   // List with all the Bluetooth devices
   final List<BluetoothDevice> _devicesList = <BluetoothDevice>[];
   // Connected Device
@@ -20,6 +22,8 @@ class BluetoothConnection extends ChangeNotifier {
 
   // Return devices List
   List<BluetoothDevice> getDevices() => _devicesList;
+  // Return RSSI
+  int getRssi(int index) => _rssiValues[index];
   // Return device
   BluetoothDevice getDevice(int index) => _devicesList[index];
   // Return connected device
@@ -28,9 +32,10 @@ class BluetoothConnection extends ChangeNotifier {
   List<BluetoothService> getServices() => _services;
 
   // Adds to the device List
-  void _addDeviceTolist(final BluetoothDevice device) {
+  void _addDeviceTolist(final BluetoothDevice device, final int rssi) {
     if (!_devicesList.contains(device)) {
       _devicesList.add(device);
+      _rssiValues.add(rssi);
       notifyListeners();
     }
   }
@@ -43,7 +48,7 @@ class BluetoothConnection extends ChangeNotifier {
     // Listen to scanResults Stream and adds to the List
     _flutterBlue.scanResults.listen((List<ScanResult> results) {
       for (ScanResult result in results) {
-        _addDeviceTolist(result.device);
+        _addDeviceTolist(result.device, result.rssi);
       }
     });
   }
