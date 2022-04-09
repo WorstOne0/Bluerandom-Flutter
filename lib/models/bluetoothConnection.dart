@@ -12,7 +12,10 @@ class BluetoothConnection extends ChangeNotifier {
   final FlutterBlue _flutterBlue = FlutterBlue.instance;
   // List with all the Bluetooth devices
   final List<BluetoothDevice> _devicesList = <BluetoothDevice>[];
+  // Connected Device
   BluetoothDevice? _connectedDevice;
+  // List of services of Connected Device
+  List<BluetoothService> _services = <BluetoothService>[];
   //final Map<Guid, List<int>> readValues = <Guid, List<int>>{};
 
   // Return devices List
@@ -21,6 +24,8 @@ class BluetoothConnection extends ChangeNotifier {
   BluetoothDevice getDevice(int index) => _devicesList[index];
   // Return connected device
   BluetoothDevice? getConnectedDevice() => _connectedDevice;
+  // Return services
+  List<BluetoothService> getServices() => _services;
 
   // Adds to the device List
   void _addDeviceTolist(final BluetoothDevice device) {
@@ -43,6 +48,7 @@ class BluetoothConnection extends ChangeNotifier {
     });
   }
 
+  // Connects to a device
   void connectToDevice(BluetoothDevice device) async {
     if (!_devicesList.contains(device)) {
       return;
@@ -59,7 +65,7 @@ class BluetoothConnection extends ChangeNotifier {
         throw error;
       }
     } finally {
-      List<BluetoothService> services = await device.discoverServices();
+      _services = await device.discoverServices();
       _connectedDevice = device;
 
       notifyListeners();
@@ -69,6 +75,8 @@ class BluetoothConnection extends ChangeNotifier {
   void disconnectDevice() {
     _connectedDevice?.disconnect();
     _connectedDevice = null;
+
+    scanDevices();
 
     notifyListeners();
   }

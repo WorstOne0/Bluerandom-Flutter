@@ -9,10 +9,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Para setar o tempo da Duração da Splash Screen
     Future.delayed(Duration(seconds: duration), () {
-      // Navigator.pushReplacement troca a tela atual(Splash Screen) por
-      // outra tela sem que o usúario possa volta para a tela anterior
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => goToPage));
     });

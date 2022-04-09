@@ -2,7 +2,7 @@ import 'package:bluerandom/pages/visualization.dart';
 import 'package:flutter/material.dart';
 
 class StartPage extends StatefulWidget {
-  StartPage({Key? key}) : super(key: key);
+  const StartPage({Key? key}) : super(key: key);
 
   @override
   State<StartPage> createState() => _StartPageState();
