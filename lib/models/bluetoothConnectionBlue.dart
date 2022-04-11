@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:flutter_blue/gen/flutterblue.pbjson.dart';
+import 'dart:async';
 
-class BluetoothConnection extends ChangeNotifier {
-  BluetoothConnection() {
+class BluetoothConnectionBlue extends ChangeNotifier {
+  BluetoothConnectionBlue() {
     scanDevices();
   }
 
   // Bluetooth Instance
   final FlutterBlue _flutterBlue = FlutterBlue.instance;
   // List with all RSSI values
-  final List<int> _rssiValues = <int>[];
+  List<int> _rssiValues = <int>[];
   // List with all the Bluetooth devices
-  final List<BluetoothDevice> _devicesList = <BluetoothDevice>[];
+  List<BluetoothDevice> _devicesList = <BluetoothDevice>[];
   // Connected Device
   BluetoothDevice? _connectedDevice;
   // List of services of Connected Device
   List<BluetoothService> _services = <BluetoothService>[];
   //final Map<Guid, List<int>> readValues = <Guid, List<int>>{};
 
+  // Return Bluetooth Instance
+  FlutterBlue getInstance() => _flutterBlue;
   // Return devices List
   List<BluetoothDevice> getDevices() => _devicesList;
-  // Return RSSI
-  int getRssi(int index) => _rssiValues[index];
   // Return device
   BluetoothDevice getDevice(int index) => _devicesList[index];
+  // Return RSSI
+  int getRssi(int index) => _rssiValues[index];
   // Return connected device
   BluetoothDevice? getConnectedDevice() => _connectedDevice;
   // Return services
@@ -43,10 +44,11 @@ class BluetoothConnection extends ChangeNotifier {
   // Start the scan
   void scanDevices() {
     // Verify if there is a default timeout
-    _flutterBlue.startScan();
+    _flutterBlue.startScan(scanMode: ScanMode.opportunistic);
 
     // Listen to scanResults Stream and adds to the List
     _flutterBlue.scanResults.listen((List<ScanResult> results) {
+      print("Times");
       for (ScanResult result in results) {
         _addDeviceTolist(result.device, result.rssi);
       }

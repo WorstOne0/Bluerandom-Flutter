@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bluerandom/models/bluetoothConnection.dart';
+import 'package:bluerandom/models/bluetoothConnectionBlue.dart';
 
+// Não funciona mais por que foi trocado de lib(flutter_blue)
 class DeviceCaracteristcs extends StatelessWidget {
   const DeviceCaracteristcs({Key? key, required this.device}) : super(key: key);
 
@@ -11,7 +12,7 @@ class DeviceCaracteristcs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Consumer<BluetoothConnection>(
+    return Container(child: Consumer<BluetoothConnectionBlue>(
       builder: (context, value, child) {
         return Scaffold(
             appBar: AppBar(
@@ -28,8 +29,8 @@ class DeviceCaracteristcs extends StatelessWidget {
                             icon: Icon(Icons.bluetooth_disabled))
                       ]
                     : []),
-            body:
-                Consumer<BluetoothConnection>(builder: (context, value, child) {
+            body: Consumer<BluetoothConnectionBlue>(
+                builder: (context, value, child) {
               return Container(
                   child: Container(
                       width: double.infinity,
