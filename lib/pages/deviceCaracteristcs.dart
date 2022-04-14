@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bluerandom/models/bluetoothConnectionBlue.dart';
+import 'package:bluerandom/models/unused.dart';
 
 // Não funciona mais por que foi trocado de lib(flutter_blue)
 class DeviceCaracteristcs extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:bluerandom/pages/deviceCaracteristcs.dart';
 
-import 'package:bluerandom/models/bluetoothConnectionR.dart';
+import 'package:bluerandom/models/bluetoothConnection.dart';
 
 class DeviceList extends StatelessWidget {
   const DeviceList({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class DeviceList extends StatelessWidget {
     int tryingConnection = -1;
 
     return Container(
-        child: Consumer<BluetoothConnectionR>(builder: (context, value, child) {
+        child: Consumer<BluetoothConnection>(builder: (context, value, child) {
       return ListView.builder(
         itemCount: value.getDevices().length,
         itemBuilder: (context, index) {

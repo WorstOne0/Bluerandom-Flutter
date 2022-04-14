@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:location_permissions/location_permissions.dart';
 
-class BluetoothConnectionR extends ChangeNotifier {
-  BluetoothConnectionR() {
+class BluetoothConnection extends ChangeNotifier {
+  BluetoothConnection() {
     requestPermissions();
   }
 
