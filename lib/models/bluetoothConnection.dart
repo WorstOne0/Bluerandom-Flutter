@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:location_permissions/location_permissions.dart';
@@ -16,8 +14,6 @@ class BluetoothConnection extends ChangeNotifier {
   // List with all devices
   List<Map> _deviceList = <Map>[];
 
-  List<DiscoveredDevice> list = <DiscoveredDevice>[];
-
   // Get connection
   FlutterReactiveBle getConnection() => _connection;
   // Get all devices
@@ -32,15 +28,31 @@ class BluetoothConnection extends ChangeNotifier {
     // Updates RSSI if already exists
     _deviceList.forEach((element) {
       if (element["id"] == device?.id) {
-        element["rssi"] = device?.rssi;
+        element["rssiOld"] = element["rssiNew"];
+        element["rssiNew"] = device?.rssi;
+
+        // ****** If necessary ******
+        // After determined time changes rssiOld to rssiNew
+        // Because it only the scan only notifies when the rssi value changes
+        // So the rssiNew and rssiOld wont ever be the same
+
+        // Future.delayed(Duration(seconds: 5), () {
+        //   print(element["id"]);
+        //   element["rssiOld"] = element["rssiNew"];
+        // });
+
         insert = false;
       }
     });
 
     // If doesn't existe, adds to the list
     if (insert) {
-      _deviceList
-          .add({"id": device?.id, "name": device?.name, "rssi": device?.rssi});
+      _deviceList.add({
+        "id": device?.id,
+        "name": device?.name,
+        "rssiNew": device?.rssi,
+        "rssiOld": 0
+      });
     }
   }
 

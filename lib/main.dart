@@ -6,9 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:bluerandom/pages/splashScreen.dart';
 import 'package:bluerandom/pages/startPage.dart';
 import 'package:bluerandom/pages/visualization.dart';
-import 'package:bluerandom/pages/deviceCaracteristcs.dart';
-
-import 'package:bluerandom/models/unused.dart';
 
 void main() => runApp(const MyApp());
 

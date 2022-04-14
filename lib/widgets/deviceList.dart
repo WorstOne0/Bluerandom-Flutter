@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bluerandom/pages/deviceCaracteristcs.dart';
-
 import 'package:bluerandom/models/bluetoothConnection.dart';
 
 class DeviceList extends StatelessWidget {
@@ -33,8 +31,8 @@ class DeviceList extends StatelessWidget {
                           flex: 1,
                           child: Container(
                             alignment: Alignment.center,
-                            child:
-                                Text(value.getDevice(index)["rssi"].toString()),
+                            child: Text(
+                                value.getDevice(index)["rssiNew"].toString()),
                           )),
                       Expanded(
                         flex: 6,
@@ -62,6 +60,13 @@ class DeviceList extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                                value.getDevice(index)["rssiOld"].toString()),
+                          )),
                     ],
                   )),
               onTap: () {
