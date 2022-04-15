@@ -9,6 +9,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // After durations times change page
     Future.delayed(Duration(seconds: duration), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => goToPage));
@@ -18,7 +19,6 @@ class SplashScreen extends StatelessWidget {
       body: Container(
         child: Column(
           children: [
-            // Fazer um Icone de Bluetooth
             Icon(Icons.bluetooth, color: Colors.white, size: 100),
             Container(
               child: Text(

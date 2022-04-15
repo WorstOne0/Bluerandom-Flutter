@@ -48,7 +48,9 @@ class _StartPageState extends State<StartPage> {
             onTap: () {
               setState(() {
                 _buttonIsElevated = true;
-                Future.delayed(Duration(milliseconds: 1500), () {
+
+                // Changes to the next page
+                Future.delayed(Duration(milliseconds: 1000), () {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

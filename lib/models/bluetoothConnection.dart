@@ -11,7 +11,7 @@ class BluetoothConnection extends ChangeNotifier {
   bool hasAccess = false;
   // Bluetooth Instance
   final FlutterReactiveBle _connection = FlutterReactiveBle();
-  // List with all devices
+  // List with all devices - Map with id, name, rssiNew, rssiOld
   List<Map> _deviceList = <Map>[];
 
   // Get connection
@@ -41,6 +41,7 @@ class BluetoothConnection extends ChangeNotifier {
         //   element["rssiOld"] = element["rssiNew"];
         // });
 
+        // Doesn't need to insert in the list
         insert = false;
       }
     });
@@ -56,7 +57,7 @@ class BluetoothConnection extends ChangeNotifier {
     }
   }
 
-  // Start the scan
+  // Start the scan **** NOT USED -  It was used a Stream Builder instead - just because it works
   void scanDevices() {
     _connection.scanForDevices(
         withServices: [], scanMode: ScanMode.balanced).listen((device) {
@@ -67,6 +68,7 @@ class BluetoothConnection extends ChangeNotifier {
     });
   }
 
+  // Request the Permissions
   void requestPermissions() async {
     var permission = await LocationPermissions().requestPermissions();
 

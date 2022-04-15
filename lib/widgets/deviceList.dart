@@ -13,8 +13,6 @@ class DeviceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int tryingConnection = -1;
-
     return Container(
         child: Consumer<BluetoothConnection>(builder: (context, value, child) {
       return ListView.builder(

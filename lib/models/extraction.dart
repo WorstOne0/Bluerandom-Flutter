@@ -1,33 +1,57 @@
 import 'package:flutter/material.dart';
 
+// All of the extractors
 enum ExtractionMethod { oddOrEvenDifference, earlyVonNeumann, oddOrEven }
 
 class Extraction extends ChangeNotifier {
   Extraction();
 
+  // Tell when it is extracting - Not used yet
   bool isExtracting = false;
 
-  late int _outputByte;
+  // Number total of bytes generated - Temporary
+  int _totalBytes = 0;
+
+  // List with 8 bits(Byte) - Temporary
+  List<int> _outputByte = <int>[];
+  // The number of bits generated, when have 8 bits(1 byte) it resets
   int _count = 0;
 
+  // Recieves a list of devices and extract the bits from it
   void startExtraction(
       List<Map> deviceList, ExtractionMethod extractionMethod) {
+    // Tells that it started extracting - Not used yet
     isExtracting = true;
 
+    // Run the extraction for each device
     deviceList.forEach((device) {
-      // var bit = extractBitFromRssi(
-      //     device["rssiNew"], device["rssiOld"], extractionMethod);
+      // Extract 1 bit from the RSSI
+      int bit = extractBitFromRssi(
+          device["rssiNew"], device["rssiOld"], extractionMethod);
 
-      _count++;
+      // If its not a invalid bit
+      if (bit != -1) {
+        _outputByte.add(bit);
+        _count++;
+      }
+
+      // Byte output
       if (_count == 8) {
         _count = 0;
+        _totalBytes++;
+        print(_outputByte);
+        print(_totalBytes);
+
+        // Just clear the list for now
+        _outputByte.clear();
       }
-      print(_count);
     });
   }
 
+  // Stops Extraction - Not used
   void stopExtraction() => isExtracting = false;
 
+  // Decides witch extractor use
   int extractBitFromRssi(
       int rssiNew, int rssiOld, ExtractionMethod extractionMethod) {
     // Selects the extraction method
@@ -54,7 +78,13 @@ class Extraction extends ChangeNotifier {
 
   // "Early" Von neumann (last bit of two consecutive RSSI readings)
   int earlyVonNeumann(int rssiNew, int rssiOld) {
-    return 0;
+    int desloc1 = rssiNew & 0x1, desloc2 = rssiOld & 0x1;
+
+    if (desloc1 == desloc2) {
+      return -1;
+    }
+
+    return desloc2 == 0 ? 0 : 1;
   }
 
   // Just odd or even. For each rssi reading.
