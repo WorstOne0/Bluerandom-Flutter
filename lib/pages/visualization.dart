@@ -12,9 +12,6 @@ class VisualizationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Instance of extraction class
-    Extraction extraction = Extraction();
-
     return Scaffold(
         appBar: AppBar(title: Text("Find Devices"), centerTitle: true),
         // Cosumer let the app uses the bluetooth connection
@@ -38,9 +35,7 @@ class VisualizationPage extends StatelessWidget {
                           // Adds the device to the list
                           value.addDeviceToList(device);
 
-                          // This is the right place???
-                          extraction.startExtraction(value.getDevices(),
-                              ExtractionMethod.oddOrEvenDifference);
+                          // print(value.getByteExtraction());
                         }
 
                         return DeviceList();

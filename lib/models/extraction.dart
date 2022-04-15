@@ -10,42 +10,44 @@ class Extraction extends ChangeNotifier {
   bool isExtracting = false;
 
   // Number total of bytes generated - Temporary
-  int _totalBytes = 0;
+  int totalBytes = 0;
 
   // List with 8 bits(Byte) - Temporary
   List<int> _outputByte = <int>[];
+  // List with the last Byte - Temporary
+  List<int> lastByte = <int>[];
   // The number of bits generated, when have 8 bits(1 byte) it resets
   int _count = 0;
 
+  List<int> getByte() => _outputByte;
+  int getCount() => _count;
+
   // Recieves a list of devices and extract the bits from it
-  void startExtraction(
-      List<Map> deviceList, ExtractionMethod extractionMethod) {
+  void startExtraction(Map device, ExtractionMethod extractionMethod) {
     // Tells that it started extracting - Not used yet
     isExtracting = true;
 
-    // Run the extraction for each device
-    deviceList.forEach((device) {
-      // Extract 1 bit from the RSSI
-      int bit = extractBitFromRssi(
-          device["rssiNew"], device["rssiOld"], extractionMethod);
+    // Extract 1 bit from the RSSI
+    int bit = extractBitFromRssi(
+        device["rssiNew"], device["rssiOld"], extractionMethod);
 
-      // If its not a invalid bit
-      if (bit != -1) {
-        _outputByte.add(bit);
-        _count++;
-      }
+    // If its not a invalid bit
+    if (bit != -1) {
+      _outputByte.add(bit);
+      _count++;
+    }
 
-      // Byte output
-      if (_count == 8) {
-        _count = 0;
-        _totalBytes++;
-        print(_outputByte);
-        print(_totalBytes);
+    // Byte output
+    if (_count == 8) {
+      _count = 0;
+      totalBytes++;
+      print(_outputByte);
+      print(totalBytes);
 
-        // Just clear the list for now
-        _outputByte.clear();
-      }
-    });
+      lastByte = [..._outputByte];
+      // Just clear the list for now
+      _outputByte.clear();
+    }
   }
 
   // Stops Extraction - Not used

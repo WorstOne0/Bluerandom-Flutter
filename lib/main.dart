@@ -1,11 +1,11 @@
-import 'package:bluerandom/models/bluetoothConnection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
+
+import 'package:bluerandom/models/bluetoothConnection.dart';
+import 'package:bluerandom/models/extraction.dart';
 
 import 'package:bluerandom/pages/splashScreen.dart';
 import 'package:bluerandom/pages/startPage.dart';
-import 'package:bluerandom/pages/visualization.dart';
 
 void main() => runApp(const MyApp());
 

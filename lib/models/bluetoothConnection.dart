@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:location_permissions/location_permissions.dart';
 
+import 'package:bluerandom/models/extraction.dart';
+
 class BluetoothConnection extends ChangeNotifier {
   BluetoothConnection() {
     requestPermissions();
@@ -13,6 +15,8 @@ class BluetoothConnection extends ChangeNotifier {
   final FlutterReactiveBle _connection = FlutterReactiveBle();
   // List with all devices - Map with id, name, rssiNew, rssiOld
   List<Map> _deviceList = <Map>[];
+  // Instance of extraction class
+  final Extraction _extraction = Extraction();
 
   // Get connection
   FlutterReactiveBle getConnection() => _connection;
@@ -20,6 +24,13 @@ class BluetoothConnection extends ChangeNotifier {
   List<Map> getDevices() => _deviceList;
   // Get device
   Map getDevice(index) => _deviceList[index];
+
+  // Get extraction connection
+  Extraction getExtraction() => _extraction;
+  // Get byte from Extraction
+  List<int> getByteExtraction() => _extraction.getByte();
+  // Get count from Extraction
+  int getCountExtraction() => _extraction.getCount();
 
   // Adds to the device List
   void addDeviceToList(final DiscoveredDevice? device) {
@@ -30,6 +41,9 @@ class BluetoothConnection extends ChangeNotifier {
       if (element["id"] == device?.id) {
         element["rssiOld"] = element["rssiNew"];
         element["rssiNew"] = device?.rssi;
+
+        // Make the extraction for the device
+        _extraction.startExtraction(element, ExtractionMethod.oddOrEven);
 
         // ****** If necessary ******
         // After determined time changes rssiOld to rssiNew
@@ -46,14 +60,19 @@ class BluetoothConnection extends ChangeNotifier {
       }
     });
 
-    // If doesn't existe, adds to the list
+    // If doesn't exist, adds to the list
     if (insert) {
-      _deviceList.add({
+      Map newDevice = {
         "id": device?.id,
         "name": device?.name,
         "rssiNew": device?.rssi,
         "rssiOld": 0
-      });
+      };
+
+      _deviceList.add(newDevice);
+
+      // Make the extraction for the device
+      _extraction.startExtraction(newDevice, ExtractionMethod.oddOrEven);
     }
   }
 
