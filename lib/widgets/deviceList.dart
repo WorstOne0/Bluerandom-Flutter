@@ -56,63 +56,65 @@ class DeviceList extends StatelessWidget {
               ),
               height: 70,
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: value.getDevices().length,
-              itemBuilder: (context, index) {
-                return Container(
-                  child: Container(
-                      height: 70,
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 1,
+            Expanded(
+              child: ListView.builder(
+                itemCount: value.getDevices().length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    child: Container(
+                        height: 70,
+                        margin: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(value
+                                      .getDevice(index)["rssiNew"]
+                                      .toString()),
+                                )),
+                            Expanded(
+                              flex: 6,
                               child: Container(
-                                alignment: Alignment.center,
-                                child: Text(value
-                                    .getDevice(index)["rssiNew"]
-                                    .toString()),
-                              )),
-                          Expanded(
-                            flex: 6,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10),
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      value.getDevice(index)["name"] == ""
-                                          ? "Unknow Device"
-                                          : value.getDevice(index)["name"],
-                                      style: TextStyle(
-                                          color: Colors.blue[700],
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold)),
-                                  Text(value.getDevice(index)["id"].toString(),
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15,
-                                          fontStyle: FontStyle.italic))
-                                ],
+                                padding: EdgeInsets.only(left: 10),
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        value.getDevice(index)["name"] == ""
+                                            ? "Unknow Device"
+                                            : value.getDevice(index)["name"],
+                                        style: TextStyle(
+                                            color: Colors.blue[700],
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        value.getDevice(index)["id"].toString(),
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 15,
+                                            fontStyle: FontStyle.italic))
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(value
-                                    .getDevice(index)["rssiOld"]
-                                    .toString()),
-                              )),
-                        ],
-                      )),
-                );
-              },
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(value
+                                      .getDevice(index)["rssiOld"]
+                                      .toString()),
+                                )),
+                          ],
+                        )),
+                  );
+                },
+              ),
             ),
           ],
         ),
