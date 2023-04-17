@@ -1,13 +1,30 @@
+// Flutter Packages
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Screens
+import 'package:bluerandom/screens/splash_screen.dart';
 
-import 'package:bluerandom/models/bluetoothConnection.dart';
-import 'package:bluerandom/models/extraction.dart';
+void main() async {
+  // Flutter initialization
+  WidgetsFlutterBinding.ensureInitialized();
 
-import 'package:bluerandom/pages/splashScreen.dart';
-import 'package:bluerandom/pages/startPage.dart';
+  // *** RIVERPOD ***
+  // State management with Riverpod (https://codewithandrea.com/articles/flutter-state-management-riverpod/)
 
-void main() => runApp(const MyApp());
+  // Startup (https://codewithandrea.com/articles/riverpod-initialize-listener-app-startup/)
+  // 1. Create a ProviderContainer
+  final container = ProviderContainer(observers: [/*Logger()*/]);
+  // 2. Use it to read the provider
+  // This starts the firebase messaging listener
+  // container.read(firebaseMessagingProvider);
+
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -15,17 +32,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Provide the bluetooth class controler to the entire app
-    return ChangeNotifierProvider(
-      create: (context) => BluetoothConnection(),
-      child: MaterialApp(
-        title: 'Bluerandom',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        // Start with the Splash Screen
-        home: SplashScreen(goToPage: StartPage(), duration: 3),
-        debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      title: 'Bluerandom',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      // Start with the Splash Screen
+      home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
