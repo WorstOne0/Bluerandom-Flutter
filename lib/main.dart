@@ -1,8 +1,11 @@
 // Flutter Packages
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 // Screens
-import 'package:bluerandom/screens/splash_screen.dart';
+import '/screens/splash_screen.dart';
+// Styles
+import 'styles/style_config.dart';
 
 void main() async {
   // Flutter initialization
@@ -31,15 +34,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provide the bluetooth class controler to the entire app
-    return MaterialApp(
-      title: 'Bluerandom',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ThemeProvider(
+      initTheme: false ? dark() : light(),
+      duration: const Duration(milliseconds: 500),
+      // GetX package - adds useful funcionalities
+      builder: (_, theme) => MaterialApp(
+        title: 'Bluerandom',
+        theme: light(),
+        // Start with the Splash Screen
+        home: const SplashScreen(),
+        debugShowCheckedModeBanner: false,
       ),
-      // Start with the Splash Screen
-      home: const SplashScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
