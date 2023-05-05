@@ -91,7 +91,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
       body: SafeArea(
         child: Container(
           child: bluetoothStatus != BleStatus.ready
-              ? Text("Não Pronto")
+              ? const Text("Não Pronto")
               : Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -103,8 +103,10 @@ class _ScanPageState extends ConsumerState<ScanPage>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                children: [
+                                children: const [
                                   SizedBox(width: 15),
+                                  Icon(Icons.bluetooth_searching),
+                                  SizedBox(width: 10),
                                   Text(
                                     "Searching ",
                                     style: TextStyle(
@@ -122,56 +124,63 @@ class _ScanPageState extends ConsumerState<ScanPage>
                               )
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           _isScanning
-                              ? Lottie.network(
-                                  "https://assets10.lottiefiles.com/packages/lf20_JMvjhFMmBd.json",
+                              ? Lottie.asset(
+                                  "assets/lottie/121006-bluetooth-searching.json",
                                   controller: _controller,
                                   onLoaded: (composition) {
                                     _controller
                                       ..duration = const Duration(seconds: 4)
                                       ..repeat();
                                   },
-                                  height: 150,
+                                  height: 120,
                                 )
                               : Container(
-                                  height: 150,
+                                  height: 120,
                                   alignment: Alignment.center,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.bluetooth_disabled,
                                     size: 60,
                                   ),
                                 ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             _isScanning ? "Searching for devices..." : "Scan is off",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Dispositivos",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: const [
+                                Icon(Icons.edgesensor_high),
+                                SizedBox(width: 10),
+                                Text(
+                                  "Dispositivos",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
                               "${deviceList.length}",
-                              style: TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey),
                             )
                           ],
                         ),
                       ),
+                      const SizedBox(height: 10),
                       Expanded(
                         child: ListView.builder(
                           itemCount: deviceList.length,
@@ -180,18 +189,27 @@ class _ScanPageState extends ConsumerState<ScanPage>
                               elevation: 2,
                               child: Container(
                                 height: 80,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 alignment: Alignment.center,
                                 child: Row(
                                   children: [
                                     Text("${deviceList[index].rssiNew}"),
                                     Expanded(
-                                        child: Text(
-                                      deviceList[index].name.isNotEmpty
-                                          ? deviceList[index].name
-                                          : "Unknown",
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
+                                        child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          deviceList[index].name.isNotEmpty
+                                              ? deviceList[index].name
+                                              : "Unknown",
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          deviceList[index].id,
+                                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                        )
+                                      ],
                                     )),
                                     Text("${deviceList[index].rssiOld ?? ''}"),
                                   ],

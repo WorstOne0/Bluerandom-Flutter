@@ -1,17 +1,24 @@
-// Flutter Packages
+// Dart
 import 'dart:async';
-
-import 'package:bluerandom/models/output_information.dart';
+// Flutter Packages
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:location_permissions/location_permissions.dart';
 // Models
-import 'package:bluerandom/models/device_information.dart';
+import '/models/device_information.dart';
+import '/models/output_information.dart';
 // Services
 import '/services/secure_storage.dart';
 
 enum ExtractionMethod { oddOrEvenDifference, earlyVonNeumann, oddOrEven }
+
+class ChartData {
+  late DateTime day;
+  late double value;
+
+  ChartData(this.day, this.value);
+}
 
 // My Controller are a mix between the Controller and Repository from the
 // Riverpod Architecture (https://codewithandrea.com/articles/flutter-app-architecture-riverpod-introduction/).
@@ -26,6 +33,7 @@ class BluetoothState {
     required this.bluetoothStatus,
     required this.outputByte,
     required this.lastByte,
+    required this.totalThroughput,
   });
 
   final Map<String, DeviceInformation> deviceList;
@@ -34,6 +42,7 @@ class BluetoothState {
   //
   final List<int> outputByte;
   final List<int> lastByte;
+  final double totalThroughput;
 
   BluetoothState copyWith({
     Map<String, DeviceInformation>? deviceList,
@@ -41,6 +50,7 @@ class BluetoothState {
     BleStatus? bluetoothStatus,
     List<int>? outputByte,
     List<int>? lastByte,
+    double? totalThroughput,
   }) {
     return BluetoothState(
       deviceList: deviceList ?? this.deviceList,
@@ -48,6 +58,7 @@ class BluetoothState {
       bluetoothStatus: bluetoothStatus ?? this.bluetoothStatus,
       outputByte: outputByte ?? this.outputByte,
       lastByte: lastByte ?? this.lastByte,
+      totalThroughput: totalThroughput ?? this.totalThroughput,
     );
   }
 }
@@ -60,6 +71,7 @@ class BluetoothController extends StateNotifier<BluetoothState> {
           bluetoothStatus: BleStatus.unknown,
           outputByte: [],
           lastByte: [],
+          totalThroughput: 0,
         ));
 
   Ref ref;
@@ -68,10 +80,13 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   // Persist Data
   SecureStorage storage = SecureStorage();
 
-  Timer? timerReset;
+  Timer? timerReset, timerThroughput;
 
-  // Number total of bytes generated - Temporary
-  int totalBytes = 0;
+  // Number total of bytes generated
+  double localThroughput = 0, maxThroughput = 0;
+  int totalBits = 0, oldBits = 0;
+  List<ChartData> chartData = [];
+  DateTime? timeStartedExtract;
   // The number of bits generated, when have 8 bits(1 byte) it resets
   int _count = 0;
 
@@ -84,6 +99,40 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     }
 
     return false;
+  }
+
+  void startedExtract() {
+    localThroughput = 0;
+    totalBits = 0;
+    chartData.clear();
+    timeStartedExtract = DateTime.now();
+
+    _count = 0;
+
+    timerThroughput = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timeStartedExtract == null) return;
+
+      localThroughput = (totalBits - oldBits) / 8;
+
+      if (localThroughput > maxThroughput) {
+        maxThroughput = localThroughput;
+      }
+
+      chartData.add(ChartData(DateTime.now(), localThroughput));
+      if (chartData.length > 10) {
+        chartData.removeAt(0);
+      }
+
+      Duration difference = DateTime.now().difference(timeStartedExtract!);
+      double totalThroughput = totalBits / (difference.inSeconds * 8);
+
+      oldBits = totalBits;
+      state = state.copyWith(totalThroughput: totalThroughput);
+    });
+  }
+
+  void stopExtract() {
+    timerThroughput?.cancel();
   }
 
   void updateBluetoothStatus(BleStatus newStatus) {
@@ -117,7 +166,6 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   // Clear the list every 30 seconds because i dont know if a device is already out of range
   void resetTimer() {
     timerReset = Timer.periodic(Duration(seconds: 30), (timer) {
-      print("Reset");
       state = state.copyWith(deviceList: {});
     });
   }
@@ -139,11 +187,12 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
       _outputByte.add(bit);
       _count++;
+      totalBits++;
 
       // Byte output
       if (_count == 8) {
+        // Clear Count
         _count = 0;
-        totalBytes++;
 
         _lastByte = [..._outputByte];
 
