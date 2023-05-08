@@ -82,12 +82,15 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   Timer? timerReset, timerThroughput;
 
+  bool isExtracting = false;
+  ExtractionMethod method = ExtractionMethod.oddOrEven;
+
   // Number total of bytes generated
   double localThroughput = 0, maxThroughput = 0;
   int totalBits = 0, oldBits = 0;
   List<ChartData> chartData = [];
   DateTime? timeStartedExtract;
-  // The number of bits generated, when have 8 bits(1 byte) it resets
+  // The number of bits generated, when have 8 bits (1 byte) it resets
   int _count = 0;
 
   // Request the Permissions
@@ -102,6 +105,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   }
 
   void startedExtract() {
+    isExtracting = true;
+
     localThroughput = 0;
     totalBits = 0;
     chartData.clear();
@@ -132,11 +137,16 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   }
 
   void stopExtract() {
+    isExtracting = false;
     timerThroughput?.cancel();
   }
 
   void updateBluetoothStatus(BleStatus newStatus) {
     state = state.copyWith(bluetoothStatus: newStatus);
+  }
+
+  void changeMethod(ExtractionMethod newMethod) {
+    method = newMethod;
   }
 
   // Adds to the device List
@@ -151,13 +161,13 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
       deviceList.update(device.id, (value) => newDevice);
 
-      startExtraction(newDevice, ExtractionMethod.oddOrEven);
+      if (isExtracting) startExtraction(newDevice, method);
     } else {
       DeviceInformation? newDevice = DeviceInformation(device.id, device.name, device.rssi, null);
 
       deviceList.addAll({device.id: newDevice});
 
-      startExtraction(newDevice, ExtractionMethod.oddOrEven);
+      if (isExtracting) startExtraction(newDevice, method);
     }
 
     state = state.copyWith(deviceList: deviceList);

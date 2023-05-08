@@ -39,10 +39,6 @@ class _ScanPageState extends ConsumerState<ScanPage>
         stopScan();
       }
 
-      if (status == BleStatus.ready) {
-        startScan();
-      }
-
       ref.read(bluetoothProvider.notifier).updateBluetoothStatus(status);
     });
 
@@ -91,7 +87,25 @@ class _ScanPageState extends ConsumerState<ScanPage>
       body: SafeArea(
         child: Container(
           child: bluetoothStatus != BleStatus.ready
-              ? const Text("Não Pronto")
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.bluetooth_disabled,
+                        size: 60,
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        "Bluetooth desativado",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -193,7 +207,23 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                 alignment: Alignment.center,
                                 child: Row(
                                   children: [
-                                    Text("${deviceList[index].rssiNew}"),
+                                    SizedBox(
+                                      width: 50,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("${deviceList[index].rssiNew}"),
+                                          Text(
+                                            "New",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                     Expanded(
                                         child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +241,23 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                         )
                                       ],
                                     )),
-                                    Text("${deviceList[index].rssiOld ?? ''}"),
+                                    SizedBox(
+                                      width: 50,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("${deviceList[index].rssiOld ?? ''}"),
+                                          Text(
+                                            "Old",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

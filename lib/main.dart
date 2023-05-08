@@ -35,12 +35,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
-      initTheme: false ? dark() : light(),
+      initTheme: true ? dark() : light(),
       duration: const Duration(milliseconds: 500),
       // GetX package - adds useful funcionalities
       builder: (_, theme) => MaterialApp(
         title: 'Bluerandom',
-        theme: light(),
+        theme: theme,
         // Start with the Splash Screen
         home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
