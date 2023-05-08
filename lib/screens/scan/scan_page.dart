@@ -90,19 +90,20 @@ class _ScanPageState extends ConsumerState<ScanPage>
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.bluetooth_disabled,
                         size: 60,
                       ),
-                      SizedBox(height: 15),
-                      Text(
+                      const SizedBox(height: 15),
+                      const Text(
                         "Bluetooth desativado",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      Text(bluetoothStatus.toString()),
                     ],
                   ),
                 )
@@ -213,7 +214,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text("${deviceList[index].rssiNew}"),
-                                          Text(
+                                          const Text(
                                             "New",
                                             style: TextStyle(
                                               fontSize: 10,
@@ -247,7 +248,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text("${deviceList[index].rssiOld ?? ''}"),
-                                          Text(
+                                          const Text(
                                             "Old",
                                             style: TextStyle(
                                               fontSize: 10,
