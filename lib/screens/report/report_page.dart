@@ -1,4 +1,5 @@
 // Flutter Packages
+import 'package:bluerandom/controllers/bluetooth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -26,6 +27,8 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
   }
 
   void asyncInit() async {
+    ref.read(bluetoothProvider.notifier).generateReport();
+
     await Future.delayed(Duration(seconds: 3));
 
     setState(() {
@@ -35,6 +38,8 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    ref.read(bluetoothProvider.notifier).generateReport();
+
     return Scaffold(
       body: SafeArea(
         child: _isLoading

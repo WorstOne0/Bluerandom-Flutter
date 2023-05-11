@@ -1,5 +1,7 @@
 // Dart
 import 'dart:async';
+import 'dart:math';
+import 'dart:typed_data';
 // Flutter Packages
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,19 +81,27 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   FlutterReactiveBle bluetoothConnectionProvider;
   // Persist Data
   SecureStorage storage = SecureStorage();
-
+  // Timers
   Timer? timerReset, timerThroughput;
 
+  // Extraction
   bool isExtracting = false;
+  DateTime? timeStartedExtract;
   ExtractionMethod method = ExtractionMethod.oddOrEven;
 
-  // Number total of bytes generated
+  // Throughput
   double localThroughput = 0, maxThroughput = 0;
+  // Bits
   int totalBits = 0, oldBits = 0;
-  List<ChartData> chartData = [];
-  DateTime? timeStartedExtract;
+  // Char Data
+  List<ChartData> realTimeThroughput = [];
   // The number of bits generated, when have 8 bits (1 byte) it resets
-  int _count = 0;
+  int count = 0;
+
+  // Analise the data
+  int buildingByte = 0, countByte = 7;
+  final bytesBuilder = BytesBuilder();
+  late Uint8List finalByteList;
 
   // Request the Permissions
   Future<bool> requestPermissions() async {
@@ -109,23 +119,27 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
     localThroughput = 0;
     totalBits = 0;
-    chartData.clear();
+    realTimeThroughput.clear();
     timeStartedExtract = DateTime.now();
 
-    _count = 0;
+    count = 0;
 
+    // Every second
     timerThroughput = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timeStartedExtract == null) return;
 
+      // How many bits were generated in the last second.
       localThroughput = (totalBits - oldBits) / 8;
 
+      // To properly show the graph
       if (localThroughput > maxThroughput) {
         maxThroughput = localThroughput;
       }
 
-      chartData.add(ChartData(DateTime.now(), localThroughput));
-      if (chartData.length > 10) {
-        chartData.removeAt(0);
+      // Add to the real time Graph
+      realTimeThroughput.add(ChartData(DateTime.now(), localThroughput));
+      if (realTimeThroughput.length > 10) {
+        realTimeThroughput.removeAt(0);
       }
 
       Duration difference = DateTime.now().difference(timeStartedExtract!);
@@ -175,7 +189,7 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   // Clear the list every 30 seconds because i dont know if a device is already out of range
   void resetTimer() {
-    timerReset = Timer.periodic(Duration(seconds: 30), (timer) {
+    timerReset = Timer.periodic(const Duration(seconds: 30), (timer) {
       state = state.copyWith(deviceList: {});
     });
   }
@@ -193,21 +207,31 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
     // If its not a invalid bit
     if (bit != -1) {
+      // Stat
+      buildingByte = buildingByte + (bit << countByte);
+      countByte--;
+
+      // Show
       List<int> _outputByte = [...state.outputByte], _lastByte = [...state.lastByte];
 
       _outputByte.add(bit);
-      _count++;
+      count++;
       totalBits++;
 
       // Byte output
-      if (_count == 8) {
+      if (count == 8) {
         // Clear Count
-        _count = 0;
+        count = 0;
+        countByte = 7;
+
+        print(_outputByte);
+        print("$buildingByte - ${buildingByte.toRadixString(2).padLeft(8, '0')}");
+        bytesBuilder.addByte(buildingByte);
 
         _lastByte = [..._outputByte];
 
-        // Just clear the list for now
         _outputByte.clear();
+        buildingByte = 0;
       }
 
       state = state.copyWith(outputByte: _outputByte, lastByte: _lastByte);
@@ -253,6 +277,71 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   int oddOrEven(int rssiNew) {
     return rssiNew % 2 == 0 ? 0 : 1;
   }
+
+  // Report
+
+  void generateReport() {
+    finalByteList = bytesBuilder.toBytes();
+    print(finalByteList.length);
+
+    // Vars
+    double shannonEntropy, minEntropy;
+
+    //
+    shannonEntropy = calcShannonEntropy();
+    //
+    minEntropy = calcMinEntropy();
+
+    print("Shannon Entropy is: $shannonEntropy");
+    print("Min Entropy is: $minEntropy");
+  }
+
+  double calcShannonEntropy() {
+    double entropy = 0;
+    Map<String, double> frequencies = {};
+
+    // Sum all the same values
+    for (var element in finalByteList) {
+      if (frequencies.containsKey(element.toString())) {
+        frequencies.update(element.toString(), (value) => ++value);
+      } else {
+        frequencies.addAll({element.toString(): 1});
+      }
+    }
+
+    // Divide by the Total to have the probability to appear
+    frequencies = frequencies.map((key, value) => MapEntry(key, value / finalByteList.length));
+
+    // Apply the formula Pi * log2(Pi)
+    for (var element in frequencies.values) {
+      entropy += (element * logBase(element, 2));
+    }
+
+    return -entropy;
+  }
+
+  double calcMinEntropy() {
+    double maxFreq = 0;
+    Map<String, double> frequencies = {};
+
+    // Sum all the same values
+    for (var element in finalByteList) {
+      if (frequencies.containsKey(element.toString())) {
+        frequencies.update(element.toString(), (value) => ++value);
+      } else {
+        frequencies.addAll({element.toString(): 1});
+      }
+    }
+
+    // Apply the formula Pi * log2(Pi)
+    for (var element in frequencies.values) {
+      maxFreq = max(maxFreq, element);
+    }
+
+    return -(logBase((maxFreq / finalByteList.length), 2));
+  }
+
+  double logBase(num x, num base) => log(x) / log(base);
 }
 
 final bluetoothConnectionProvider = Provider<FlutterReactiveBle>((ref) => FlutterReactiveBle());

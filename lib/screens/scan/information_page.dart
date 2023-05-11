@@ -105,7 +105,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
     List<int> lastByte = ref.watch(bluetoothProvider).lastByte;
 
     int totalBits = ref.read(bluetoothProvider.notifier).totalBits;
-    List<ChartData> chartData = ref.read(bluetoothProvider.notifier).chartData;
+    List<ChartData> realTimeThroughput = ref.read(bluetoothProvider.notifier).realTimeThroughput;
 
     DateTime? timeStartedExtract = ref.read(bluetoothProvider.notifier).timeStartedExtract;
     Duration durationSinceStart =
@@ -349,11 +349,11 @@ class _InformationPageState extends ConsumerState<InformationPage>
                               enableDoubleTapZooming: true,
                             ),
                             primaryXAxis: DateTimeAxis(
-                              minimum: chartData.isNotEmpty
-                                  ? chartData.first.day
+                              minimum: realTimeThroughput.isNotEmpty
+                                  ? realTimeThroughput.first.day
                                   : DateTime.now().subtract(const Duration(days: 1)),
-                              maximum: chartData.isNotEmpty
-                                  ? chartData.last.day
+                              maximum: realTimeThroughput.isNotEmpty
+                                  ? realTimeThroughput.last.day
                                   : DateTime.now().subtract(const Duration(days: 1)),
                               interval: 2,
                               isVisible: true,
@@ -377,7 +377,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                             series: [
                               SplineSeries(
                                 animationDuration: 0,
-                                dataSource: chartData,
+                                dataSource: realTimeThroughput,
                                 xValueMapper: (ChartData data, _) => data.day,
                                 yValueMapper: (ChartData data, _) => data.value,
                                 color: Theme.of(context).colorScheme.primary,
@@ -467,25 +467,6 @@ class _InformationPageState extends ConsumerState<InformationPage>
                               Text(
                                 "${totalThroughput.toStringAsFixed(2)} bytes/s",
                                 style: const TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text(
-                                "Entropia",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "???",
-                                style: TextStyle(color: Colors.grey),
                               )
                             ],
                           ),
