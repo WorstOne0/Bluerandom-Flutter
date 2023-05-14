@@ -63,7 +63,6 @@ class _InformationPageState extends ConsumerState<InformationPage>
                     color: Colors.transparent,
                     child: const Text(
                       "Não",
-                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                   MaterialButton(
@@ -83,7 +82,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: const Text(
                       "Gerar",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ],

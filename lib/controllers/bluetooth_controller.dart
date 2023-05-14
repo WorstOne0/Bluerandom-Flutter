@@ -86,7 +86,7 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   // Extraction
   bool isExtracting = false;
-  DateTime? timeStartedExtract;
+  DateTime? timeStartedExtract, timeFinishedExtract;
   ExtractionMethod method = ExtractionMethod.oddOrEven;
 
   // Throughput
@@ -102,6 +102,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   int buildingByte = 0, countByte = 7;
   final bytesBuilder = BytesBuilder();
   late Uint8List finalByteList;
+  // Vars
+  double shannonEntropy = 0, minEntropy = 0;
 
   // Request the Permissions
   Future<bool> requestPermissions() async {
@@ -121,6 +123,7 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     totalBits = 0;
     realTimeThroughput.clear();
     timeStartedExtract = DateTime.now();
+    timeFinishedExtract = null;
 
     count = 0;
 
@@ -153,6 +156,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   void stopExtract() {
     isExtracting = false;
     timerThroughput?.cancel();
+
+    timeFinishedExtract = DateTime.now();
   }
 
   void updateBluetoothStatus(BleStatus newStatus) {
@@ -284,16 +289,10 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     finalByteList = bytesBuilder.toBytes();
     print(finalByteList.length);
 
-    // Vars
-    double shannonEntropy, minEntropy;
-
     //
     shannonEntropy = calcShannonEntropy();
     //
     minEntropy = calcMinEntropy();
-
-    print("Shannon Entropy is: $shannonEntropy");
-    print("Min Entropy is: $minEntropy");
   }
 
   double calcShannonEntropy() {
