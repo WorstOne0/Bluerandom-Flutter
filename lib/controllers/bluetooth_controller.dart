@@ -229,8 +229,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
         count = 0;
         countByte = 7;
 
-        print(_outputByte);
-        print("$buildingByte - ${buildingByte.toRadixString(2).padLeft(8, '0')}");
+        // print(_outputByte);
+        // print("$buildingByte - ${buildingByte.toRadixString(2).padLeft(8, '0')}");
         bytesBuilder.addByte(buildingByte);
 
         _lastByte = [..._outputByte];
@@ -287,7 +287,6 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   void generateReport() {
     finalByteList = bytesBuilder.toBytes();
-    print(finalByteList.length);
 
     //
     shannonEntropy = calcShannonEntropy();
