@@ -82,7 +82,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: const Text(
                       "Gerar",
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -315,7 +315,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                               Icon(Icons.bar_chart),
                               SizedBox(width: 10),
                               Text(
-                                "Graficos",
+                                "Throughput",
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -393,7 +393,6 @@ class _InformationPageState extends ConsumerState<InformationPage>
                             ],
                           ),
                         ),
-                        const SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Row(

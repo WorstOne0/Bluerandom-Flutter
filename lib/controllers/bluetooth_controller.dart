@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:location_permissions/location_permissions.dart';
+import 'package:battery_plus/battery_plus.dart';
 // Models
 import '/models/device_information.dart';
 import '/models/output_information.dart';
@@ -81,20 +82,27 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   FlutterReactiveBle bluetoothConnectionProvider;
   // Persist Data
   SecureStorage storage = SecureStorage();
+  // Battery
+  Battery battery = Battery();
   // Timers
   Timer? timerReset, timerThroughput;
 
   // Extraction
-  bool isExtracting = false;
+  bool isExtracting = false, isOnReport = false;
   DateTime? timeStartedExtract, timeFinishedExtract;
   ExtractionMethod method = ExtractionMethod.oddOrEven;
 
+  // Battery
+  int batteryStart = 0, batteryEnd = 0;
+
   // Throughput
-  double localThroughput = 0, maxThroughput = 0;
+  double localThroughput = 0, maxThroughput = 0, maxDevices = 0;
   // Bits
   int totalBits = 0, oldBits = 0;
-  // Char Data
+  // Real Time Data
   List<ChartData> realTimeThroughput = [];
+  // Total Data
+  List<ChartData> allThroughput = [], allDevices = [];
   // The number of bits generated, when have 8 bits (1 byte) it resets
   int count = 0;
 
@@ -116,16 +124,19 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     return false;
   }
 
-  void startedExtract() {
+  void startedExtract() async {
     isExtracting = true;
 
     localThroughput = 0;
+    maxThroughput = 0;
     totalBits = 0;
     realTimeThroughput.clear();
     timeStartedExtract = DateTime.now();
     timeFinishedExtract = null;
 
     count = 0;
+    maxDevices = 0;
+    countByte = 7;
 
     // Every second
     timerThroughput = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -144,6 +155,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
       if (realTimeThroughput.length > 10) {
         realTimeThroughput.removeAt(0);
       }
+      // Add to the total
+      allThroughput.add(ChartData(DateTime.now(), localThroughput));
 
       Duration difference = DateTime.now().difference(timeStartedExtract!);
       double totalThroughput = totalBits / (difference.inSeconds * 8);
@@ -151,13 +164,18 @@ class BluetoothController extends StateNotifier<BluetoothState> {
       oldBits = totalBits;
       state = state.copyWith(totalThroughput: totalThroughput);
     });
+
+    // Get Battery
+    batteryStart = await battery.batteryLevel;
   }
 
-  void stopExtract() {
+  void stopExtract() async {
     isExtracting = false;
     timerThroughput?.cancel();
 
     timeFinishedExtract = DateTime.now();
+
+    batteryEnd = await battery.batteryLevel;
   }
 
   void updateBluetoothStatus(BleStatus newStatus) {
@@ -170,6 +188,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   // Adds to the device List
   void addDeviceToList(DiscoveredDevice device) {
+    if (isOnReport) return;
+
     Map<String, DeviceInformation> deviceList = {...state.deviceList};
 
     // Put trip in the map
@@ -187,6 +207,14 @@ class BluetoothController extends StateNotifier<BluetoothState> {
       deviceList.addAll({device.id: newDevice});
 
       if (isExtracting) startExtraction(newDevice, method);
+    }
+
+    double numDevices = deviceList.length.toDouble();
+    // Add to the total
+    allDevices.add(ChartData(DateTime.now(), numDevices));
+    // To properly show the graph
+    if (numDevices > maxDevices) {
+      maxDevices = numDevices;
     }
 
     state = state.copyWith(deviceList: deviceList);
@@ -286,6 +314,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   // Report
 
   void generateReport() {
+    isOnReport = true;
+
     finalByteList = bytesBuilder.toBytes();
 
     //
@@ -337,6 +367,10 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     }
 
     return -(logBase((maxFreq / finalByteList.length), 2));
+  }
+
+  void leaveReport() {
+    isOnReport = false;
   }
 
   double logBase(num x, num base) => log(x) / log(base);

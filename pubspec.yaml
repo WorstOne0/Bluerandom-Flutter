@@ -29,6 +29,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   intl: ^0.18.1
   select_dialog: ^2.0.0
+  battery_plus: ^4.0.0
 
 dev_dependencies:
   flutter_test:
