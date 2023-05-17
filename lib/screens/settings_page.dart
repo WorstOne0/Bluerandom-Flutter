@@ -1,9 +1,10 @@
 // Flutter Packages
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:bluerandom/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+// Services
+import '/services/secure_storage.dart';
+// Styles
 import '../styles/style_config.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -19,6 +20,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with AutomaticKeepA
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

@@ -1,9 +1,10 @@
 // Flutter Packages
-import 'package:bluerandom/controllers/bluetooth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+// Controllers
+import '/controllers/bluetooth_controller.dart';
 
 class ReportPage extends ConsumerStatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -121,6 +122,20 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
     );
   }
 
+  String getMethod(ExtractionMethod method) {
+    switch (method) {
+      case ExtractionMethod.oddOrEven:
+        return "Odd Or Even";
+      case ExtractionMethod.oddOrEvenDifference:
+        return "Odd Or Even Difference";
+      case ExtractionMethod.earlyVonNeumann:
+        return "Early Von Neumann";
+
+      default:
+        return "";
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -131,6 +146,7 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     // Info
+    ExtractionMethod method = ref.read(bluetoothProvider.notifier).method;
     DateTime? timeStartedExtract = ref.read(bluetoothProvider.notifier).timeStartedExtract;
     DateTime? timeFinishedExtract = ref.read(bluetoothProvider.notifier).timeFinishedExtract;
     Duration durationSinceStart = timeFinishedExtract == null
@@ -188,6 +204,7 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                 ),
               )
             : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
@@ -212,6 +229,22 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Método",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  getMethod(method),
+                                  style: const TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 15),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -276,7 +309,7 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
-                                      "($batteryEnd% - $batteryStart%)",
+                                      "($batteryStart% - $batteryEnd%)",
                                       style: const TextStyle(color: Colors.grey),
                                     ),
                                   ],
@@ -370,16 +403,25 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.bar_chart),
-                            SizedBox(width: 10),
-                            Text(
-                              "Throughput",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                Icon(Icons.bar_chart),
+                                SizedBox(width: 10),
+                                Text(
+                                  "Throughput",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
+                            Text(
+                              "Bytes/s",
+                              style: TextStyle(color: Colors.grey),
+                            )
                           ],
                         ),
                       ),
@@ -413,7 +455,6 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                             maximum: allThroughput.isNotEmpty
                                 ? allThroughput.last.day
                                 : DateTime.now().subtract(const Duration(days: 1)),
-                            interval: 2,
                             isVisible: true,
                             borderWidth: 0,
                             borderColor: Colors.transparent,
@@ -532,7 +573,6 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                             maximum: allDevices.isNotEmpty
                                 ? allDevices.last.day
                                 : DateTime.now().subtract(const Duration(days: 1)),
-                            interval: 2,
                             isVisible: true,
                             borderWidth: 0,
                             borderColor: Colors.transparent,

@@ -6,8 +6,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:location_permissions/location_permissions.dart';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 // Models
 import '/models/device_information.dart';
 import '/models/output_information.dart';
@@ -115,13 +115,14 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   // Request the Permissions
   Future<bool> requestPermissions() async {
-    var permission = await LocationPermissions().requestPermissions();
+    bool location, bluetooth;
 
-    if (permission == PermissionStatus.granted) {
-      return true;
-    }
+    // Location
+    location = await Permission.locationWhenInUse.request().isGranted;
+    // Bluetooth
+    bluetooth = await Permission.bluetoothScan.request().isGranted;
 
-    return false;
+    return location && bluetooth;
   }
 
   void startedExtract() async {
@@ -131,6 +132,8 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     maxThroughput = 0;
     totalBits = 0;
     realTimeThroughput.clear();
+    allThroughput.clear();
+    allDevices.clear();
     timeStartedExtract = DateTime.now();
     timeFinishedExtract = null;
 
@@ -157,6 +160,21 @@ class BluetoothController extends StateNotifier<BluetoothState> {
       }
       // Add to the total
       allThroughput.add(ChartData(DateTime.now(), localThroughput));
+
+      double numDevices = state.deviceList.length.toDouble();
+      // Add to the total
+      allDevices.add(ChartData(
+        DateTime.now(),
+        numDevices != 0
+            ? numDevices
+            : allDevices.last.value == 0
+                ? 0
+                : allDevices.last.value,
+      ));
+      // To properly show the graph
+      if (numDevices > maxDevices) {
+        maxDevices = numDevices;
+      }
 
       Duration difference = DateTime.now().difference(timeStartedExtract!);
       double totalThroughput = totalBits / (difference.inSeconds * 8);
@@ -207,14 +225,6 @@ class BluetoothController extends StateNotifier<BluetoothState> {
       deviceList.addAll({device.id: newDevice});
 
       if (isExtracting) startExtraction(newDevice, method);
-    }
-
-    double numDevices = deviceList.length.toDouble();
-    // Add to the total
-    allDevices.add(ChartData(DateTime.now(), numDevices));
-    // To properly show the graph
-    if (numDevices > maxDevices) {
-      maxDevices = numDevices;
     }
 
     state = state.copyWith(deviceList: deviceList);

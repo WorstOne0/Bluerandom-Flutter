@@ -30,6 +30,7 @@ dependencies:
   intl: ^0.18.1
   select_dialog: ^2.0.0
   battery_plus: ^4.0.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

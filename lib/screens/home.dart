@@ -1,13 +1,13 @@
 // Flutter Packages
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:bluerandom/screens/scan/information_page.dart';
-import 'package:bluerandom/screens/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 // Screens
-import 'package:bluerandom/screens/scan/scan_page.dart';
+import '/screens/scan/scan_page.dart';
+import '/screens/scan/information_page.dart';
+import '/screens/settings_page.dart';
 // Controllers
-import 'package:bluerandom/controllers/bluetooth_controller.dart';
+import '/controllers/bluetooth_controller.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);

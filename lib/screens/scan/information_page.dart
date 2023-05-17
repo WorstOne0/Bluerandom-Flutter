@@ -9,7 +9,6 @@ import '../report/report_page.dart';
 // Controllers
 import '/controllers/bluetooth_controller.dart';
 // Utils
-import '/utils/date_format.dart';
 
 class InformationPage extends ConsumerStatefulWidget {
   const InformationPage({Key? key}) : super(key: key);
@@ -78,7 +77,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                     },
                     elevation: 0,
                     color: Theme.of(context).colorScheme.primary,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: const Text(
                       "Gerar",
@@ -124,8 +123,8 @@ class _InformationPageState extends ConsumerState<InformationPage>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           SizedBox(width: 15),
                           Icon(Icons.memory),
                           SizedBox(width: 10),
@@ -232,8 +231,8 @@ class _InformationPageState extends ConsumerState<InformationPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: const [
+                              const Row(
+                                children: [
                                   Icon(Icons.pallet),
                                   SizedBox(width: 10),
                                   Text(
@@ -308,19 +307,28 @@ class _InformationPageState extends ConsumerState<InformationPage>
                           ],
                         ),
                         const SizedBox(height: 30),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Row(
-                            children: const [
-                              Icon(Icons.bar_chart),
-                              SizedBox(width: 10),
-                              Text(
-                                "Throughput",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.bar_chart),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Throughput",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
+                              Text(
+                                "Bytes/s",
+                                style: TextStyle(color: Colors.grey),
+                              )
                             ],
                           ),
                         ),
@@ -393,10 +401,10 @@ class _InformationPageState extends ConsumerState<InformationPage>
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Row(
-                            children: const [
+                            children: [
                               Icon(
                                 FontAwesomeIcons.circleInfo,
                                 size: 18,

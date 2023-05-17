@@ -1,9 +1,10 @@
 // Flutter Packages
-import 'package:bluerandom/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Models
 import '/models/user.dart';
+// Services
+import '/services/secure_storage.dart';
 
 // My Controller are a mix between the Controller and Repository from the
 // Riverpod Architecture (https://codewithandrea.com/articles/flutter-app-architecture-riverpod-introduction/).

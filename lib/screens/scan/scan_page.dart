@@ -117,8 +117,8 @@ class _ScanPageState extends ConsumerState<ScanPage>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: const [
+                              const Row(
+                                children: [
                                   SizedBox(width: 15),
                                   Icon(Icons.bluetooth_searching),
                                   SizedBox(width: 10),
@@ -175,8 +175,8 @@ class _ScanPageState extends ConsumerState<ScanPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: const [
+                            const Row(
+                              children: [
                                 Icon(Icons.edgesensor_high),
                                 SizedBox(width: 10),
                                 Text(
