@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:wakelock/wakelock.dart';
 // Screens
 import '/screens/scan/scan_page.dart';
 import '/screens/scan/information_page.dart';
@@ -26,6 +27,9 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
 
+    // Keeps the screen on
+    Wakelock.enable();
+
     asyncInit();
   }
 
@@ -33,6 +37,13 @@ class _HomeState extends ConsumerState<Home> {
     _hasPermission = await ref.read(bluetoothProvider.notifier).requestPermissions();
 
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    Wakelock.disable();
+
+    super.dispose();
   }
 
   @override

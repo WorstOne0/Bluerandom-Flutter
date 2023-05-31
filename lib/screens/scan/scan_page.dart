@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:select_dialog/select_dialog.dart';
 // Controllers
 import '/models/device_information.dart';
 import '/controllers/bluetooth_controller.dart';
@@ -27,12 +28,15 @@ class _ScanPageState extends ConsumerState<ScanPage>
   StreamSubscription? _bluetoothConnection, _bluetoothStatus;
 
   bool _isScanning = false;
+  ScanMode scanMode = ScanMode.balanced;
 
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(vsync: this);
+
+    scanMode = ref.read(bluetoothProvider.notifier).scanMode;
 
     _bluetoothStatus = ref.read(bluetoothConnectionProvider).statusStream.listen((status) {
       if (status != BleStatus.ready) {
@@ -48,7 +52,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
   void startScan() {
     _bluetoothConnection = ref.read(bluetoothConnectionProvider).scanForDevices(
       withServices: [],
-      scanMode: ScanMode.balanced,
+      scanMode: scanMode,
     ).listen((device) {
       // Add the device
       ref.read(bluetoothProvider.notifier).addDeviceToList(device);
@@ -139,7 +143,77 @@ class _ScanPageState extends ConsumerState<ScanPage>
                               )
                             ],
                           ),
-                          const SizedBox(height: 5),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Metodo",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                _isScanning
+                                    ? Text(
+                                        scanMode.toString(),
+                                        style: const TextStyle(color: Colors.grey),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          SelectDialog.showModal<String>(
+                                            context,
+                                            label: "Selecione o Modo",
+                                            selectedValue: "",
+                                            showSearchBox: false,
+                                            itemBuilder: (context, item, isSelected) => Container(
+                                              height: 50,
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                item,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            items: [
+                                              ScanMode.balanced.toString(),
+                                              ScanMode.lowLatency.toString(),
+                                            ],
+                                            onChange: (String selected) {
+                                              if (selected == "ScanMode.balanced") {
+                                                ref
+                                                    .read(bluetoothProvider.notifier)
+                                                    .changeMode(ScanMode.balanced);
+
+                                                setState(() {
+                                                  scanMode = ScanMode.balanced;
+                                                });
+                                              }
+
+                                              if (selected == "ScanMode.lowLatency") {
+                                                ref
+                                                    .read(bluetoothProvider.notifier)
+                                                    .changeMode(ScanMode.lowLatency);
+
+                                                setState(() {
+                                                  scanMode = ScanMode.lowLatency;
+                                                });
+                                              }
+                                            },
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.keyboard_arrow_down),
+                                            const SizedBox(width: 5),
+                                            Text(scanMode.toString()),
+                                          ],
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           _isScanning
                               ? Lottie.asset(
                                   "assets/lottie/121006-bluetooth-searching.json",

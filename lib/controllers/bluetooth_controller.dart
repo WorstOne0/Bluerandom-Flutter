@@ -91,6 +91,7 @@ class BluetoothController extends StateNotifier<BluetoothState> {
   bool isExtracting = false, isOnReport = false;
   DateTime? timeStartedExtract, timeFinishedExtract;
   ExtractionMethod method = ExtractionMethod.oddOrEven;
+  ScanMode scanMode = ScanMode.balanced;
 
   // Battery
   int batteryStart = 0, batteryEnd = 0;
@@ -136,6 +137,9 @@ class BluetoothController extends StateNotifier<BluetoothState> {
     allDevices.clear();
     timeStartedExtract = DateTime.now();
     timeFinishedExtract = null;
+    bytesBuilder.clear();
+    shannonEntropy = 0;
+    minEntropy = 0;
 
     count = 0;
     maxDevices = 0;
@@ -202,6 +206,10 @@ class BluetoothController extends StateNotifier<BluetoothState> {
 
   void changeMethod(ExtractionMethod newMethod) {
     method = newMethod;
+  }
+
+  void changeMode(ScanMode mode) {
+    scanMode = mode;
   }
 
   // Adds to the device List

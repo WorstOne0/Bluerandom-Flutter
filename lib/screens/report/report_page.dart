@@ -17,7 +17,7 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
   //
   late final AnimationController _controller;
 
-  bool _isLoading = true;
+  bool _isLoading = true, _isSaving = false;
 
   @override
   void initState() {
@@ -68,60 +68,6 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
     );
   }
 
-  void saveToDevice() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        insetPadding: const EdgeInsets.all(60),
-        title: const Text(
-          "Deseja salvar esse relatorio?",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: SizedBox(
-          height: 110,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Extração finalizada! Gostaria de gerar um relatorio?"),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: const Text(
-                      "Não",
-                    ),
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    elevation: 0,
-                    color: Theme.of(context).colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    child: const Text(
-                      "Salvar",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   String getMethod(ExtractionMethod method) {
     switch (method) {
       case ExtractionMethod.oddOrEven:
@@ -134,6 +80,18 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
       default:
         return "";
     }
+  }
+
+  void saveToDevice() async {
+    if (_isSaving) return;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    setState(() {
+      _isSaving = false;
+    });
   }
 
   @override
@@ -186,8 +144,17 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
           ),
           centerTitle: true,
           // actions: [
-          //   IconButton(onPressed: saveToDevice, icon: Icon(Icons.save)),
-          //   SizedBox(width: 10)
+          //   IconButton(
+          //     onPressed: saveToDevice,
+          //     icon: _isSaving
+          //         ? const SizedBox(
+          //             height: 20,
+          //             width: 20,
+          //             child: CircularProgressIndicator(),
+          //           )
+          //         : const Icon(Icons.save),
+          //   ),
+          //   const SizedBox(width: 10)
           // ],
         ),
         body: _isLoading
