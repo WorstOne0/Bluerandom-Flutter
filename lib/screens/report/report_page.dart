@@ -1,5 +1,6 @@
 // Flutter Packages
 import 'package:flutter/material.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -105,6 +106,8 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
   Widget build(BuildContext context) {
     // Info
     ExtractionMethod method = ref.read(bluetoothProvider.notifier).method;
+    ScanMode mode = ref.read(bluetoothProvider.notifier).scanMode;
+
     DateTime? timeStartedExtract = ref.read(bluetoothProvider.notifier).timeStartedExtract;
     DateTime? timeFinishedExtract = ref.read(bluetoothProvider.notifier).timeFinishedExtract;
     Duration durationSinceStart = timeFinishedExtract == null
@@ -207,6 +210,22 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                                 ),
                                 Text(
                                   getMethod(method),
+                                  style: const TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Modo",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  mode.toString(),
                                   style: const TextStyle(color: Colors.grey),
                                 )
                               ],
