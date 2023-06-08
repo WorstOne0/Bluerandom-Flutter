@@ -34,12 +34,20 @@ dependencies:
   wakelock: ^0.6.2
   share_plus: ^6.3.4
   screenshot: ^2.1.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^1.0.0
+
+flutter_icons:
+  android: true
+  image_path_android: "assets/images/logo.png"
+  ios: true
+  image_path_ios: "assets/images/logo.png"
+  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -127,7 +127,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                   Icon(Icons.bluetooth_searching),
                                   SizedBox(width: 10),
                                   Text(
-                                    "Searching ",
+                                    "Busca",
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
                                 ),
                           const SizedBox(height: 10),
                           Text(
-                            _isScanning ? "Searching for devices..." : "Scan is off",
+                            _isScanning ? "Buscando por dispositivos..." : "Busca esta desativada.",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

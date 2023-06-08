@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // Screens
-import 'package:bluerandom/screens/home.dart';
+import '/screens/home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -39,7 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.bluetooth, color: Colors.white, size: 100),
+            Image.asset(
+              "assets/images/logo.png",
+              width: 100,
+            ),
             const SizedBox(height: 15),
             Text(
               "Bluerandom",

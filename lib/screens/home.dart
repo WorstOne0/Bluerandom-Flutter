@@ -51,7 +51,25 @@ class _HomeState extends ConsumerState<Home> {
     return ThemeSwitchingArea(
       child: Scaffold(
         body: !_hasPermission
-            ? const Text("Loading")
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.block,
+                      size: 60,
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      "Sem permissão",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             : PageView(
                 controller: _pageController,
                 onPageChanged: (value) => setState(() => _currentPage = value),
@@ -62,7 +80,7 @@ class _HomeState extends ConsumerState<Home> {
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.radar),
-                    label: 'Scan',
+                    label: 'Busca',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.bar_chart_outlined),

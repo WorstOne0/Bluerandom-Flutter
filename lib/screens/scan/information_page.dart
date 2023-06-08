@@ -129,7 +129,7 @@ class _InformationPageState extends ConsumerState<InformationPage>
                           Icon(Icons.memory),
                           SizedBox(width: 10),
                           Text(
-                            "Extract ",
+                            "Extração ",
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,

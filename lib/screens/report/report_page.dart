@@ -46,23 +46,29 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
         height: 400,
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(15),
-        child: const Column(
+        child: Column(
           children: [
-            Text(
-              "Entropy",
+            const Text(
+              "Entropia",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            Padding(
+            const SizedBox(height: 20),
+            const Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                "Explicar entropia, função, etc... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                "A ideia de entropia vem inicialmente da termodinâmica, ela fornece uma medida de"
+                "irreversibilidade de um determinado sistema. Na área de teoria da informação é utilizado o "
+                "termo entropia, ou entropia de Shannon, para medir o grau de incerteza, ou a ’quantidade de "
+                "informação’ de um sistema, ou seja, quanto maior for a variabilidade de símbolos maior será a "
+                "quantidade de informação. Ela e calculada pela formula: ",
                 textAlign: TextAlign.justify,
               ),
             ),
+            SizedBox(height: 10),
+            Image.asset("assets/images/entropy.png")
           ],
         ),
       ),
@@ -266,26 +272,11 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "Cons. Bateria",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    GestureDetector(
-                                      onTap: () {
-                                        showInfoEntropy(context);
-                                      },
-                                      child: const Icon(
-                                        Icons.info_outline,
-                                        size: 16,
-                                        color: Colors.grey,
-                                      ),
-                                    )
-                                  ],
+                                const Text(
+                                  "Cons. Bateria",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -517,7 +508,7 @@ class _ReportPageState extends ConsumerState<ReportPage> with SingleTickerProvid
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
                           children: [
-                            Icon(Icons.bar_chart),
+                            Icon(Icons.edgesensor_high),
                             SizedBox(width: 10),
                             Text(
                               "Dispositivos",
