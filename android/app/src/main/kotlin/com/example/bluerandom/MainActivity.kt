@@ -1,4 +1,4 @@
-package com.example.bluerandom
+package br.com.bluerandom
 
 import io.flutter.embedding.android.FlutterActivity
 
